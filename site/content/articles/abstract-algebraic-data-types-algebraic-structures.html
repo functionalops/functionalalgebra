@@ -175,17 +175,96 @@ data Notification = Notification Post [User] DateTime
   </q>
 </blockquote>
 
-<!--
+<div class="well">
 <h4>Sum Types (aka Tagged Unions)</h4>
+
 <p>
 TODO: Explain the algebraic properties of sum types.
 </p>
 
+<p>
+Let's step back to a basic example of a <em>sum type</em> (which is one
+variety of AlgDTs) to illustrate the difference between a sum type and
+a pure product type.
+</p>
+
+<pre>
+// Scala here to mix it up :)
+
+sealed trait USCoin                 { def value: Int  }
+case object Penny extends USCoin    { def value = 1   }
+case object Nickel extends USCoin   { def value = 5   }
+case object Dime extends USCoin     { def value = 10  }
+case object Quarter extends USCoin  { def value = 25  }
+case object Dollar extends USCoin   { def value = 100 }
+</pre>
+
+<p>
+The above just tells Scala that there is this trait (in this case we can
+pretend it is the same as the LHS of Haskell's data declaration, but it
+isn't always this way), <code>USCoin</code>, that has a finite, and known
+number of constructors up front (typically how case classes in Scala get used
+[well]). Note that the trait is <code>sealed</code>. For non-Scala people
+this just means that outside of this source file, no extensions of this
+trait are allowed. i.e. the compiler can guarantee that consumers of our
+libraries, or toolkits cannot extend USCoin. In this particular scenario
+that is probably what we want (not allowing consumers of our code to
+extend this). The likelihood that the US central bank would introduce
+new coins or take existing coins out of circulation before we update our
+library in time to cater for it, is pretty unlikely. However, there is
+another good reason why we might want this too: we can know we have
+exhaustively catered for all constructions of USCoin in our supporting
+logic or calculations.
+</p>
+
+<p>
+You might be wondering how this can be done. Let us try to use this code
+(found in the GitHub repository...TODO link here) to explore this idea
+further. So fire up <code>sbt console</code> in the <tt>algdt</tt>
+subproject in the git repository.
+</p>
+
+<pre>
+scala> import funalgebra.algdt._
+import funalgebra.algdt._
+
+scala> object VendingMachine {
+     |   def accepts(coin: USCoin): Boolean = coin match {
+     |     case Penny => false
+     |     case Nickel => false
+     |     case Dime => true
+     |     case Quarter => true
+     |   }
+     | }
+<console>:12: warning: match is not exhaustive!
+missing combination         Dollar
+
+         def accepts(coin: USCoin): Boolean = coin match {
+                                              ^
+defined module VendingMachine
+</pre>
+
+<p>
+What happened here is that we forgot to match on the <code>Dollar</code>
+constructor for <code>USCoin</code> <em>sum type</em> and the Scala
+compiler warned us about it. If you find you want this behaviour for
+a particular data type definition, then you probably want to define it
+as a sum type this way.
+</p>
+
 <h4>Product Types (aka Record Types)</h4>
+
 <p>
 TODO: Explain the algebraic properties of product types.
 </p>
--->
+
+<h4>Sum vs. Product Types Face Off</h4>
+
+<p>
+TODO: When would you chose one over the other and when AlgDTs shouldn't
+be used at all.
+</p>
+</div>
 
 <h3>Algebraic [Data] Structures</h3>
 
@@ -201,8 +280,13 @@ monoid at all).
 <p>
 In fact, in Haskell a <code>Monoid</code> is defined as a typeclass, which
 is not an <abbr title="Algebraic Data Type">AlgDT</abbr>, however, you can
-view it as an <abbr title="Abstract Data Type">ADT</abbr> as it specifies
-an interface and contract without describing implementation details.
+view it as an <abbr title="Abstract Data Type">ADT</abbr> by the above
+definition as it specifies an interface and contract without describing
+implementation details.
+</p>
+
+<p>
+
 </p>
 
 <h3>Conclusion</h3>
