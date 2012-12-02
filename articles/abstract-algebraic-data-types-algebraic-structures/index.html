@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Functional Algebra: Abstract Data Types, Algebraic Data Types and Algebraic [Data] Structures</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Learn through code examples, intuitions,
+      and some algebraic defintions how to start using algebraic abstractions
+      in programming effectively.">
+    <meta name="author" content="Susan Potter">
+    <meta name="twitter:site" content="@FunAlgebra">
+    <meta name="twitter:url" content="http://www.functionalalgebra.com/">
+    <meta name="twitter:title" content="Functional Algebra">
+    <meta name="twitter:description" content="">
+    <meta name="twitter:image" content="">
+
+    <!-- CSS -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/funalgebra.css" rel="stylesheet">
+    <link href="/css/bootstrap-responsive.min.css" rel="stylesheet">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Fav and touch icons -->
+    <!--
+    <link rel="shortcut icon" href="/ico/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/ico/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/ico/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="/ico/apple-touch-icon-57-precomposed.png">
+    -->
+  </head>
+
+  <body>
+    <!-- Part 1: Wrap all page content here -->
+    <div id="wrap">
+
+      <!-- Begin page content -->
+      <div class="container article">
+        <div class="page-header">
+          <h2>
+            Abstract Data Types, Algebraic Data Types and Algebraic [Data] Structures
+          </h2>
+        </div>
+        <blockquote class="pull-right">
+          <p><em>Discussing the differences between abstract data types, algebraic data types, and algebraic [data] structures.</em></p>
+        </blockquote>
+        <p>
+I wasn't intending to write this article but then <a href="https://twitter.com/chvest">@chvest</a>
+asked me to clarify (see below), so hopefully this will be a short, sweet,
+and informal explanation that does the job.
+</p>
+
+<blockquote class="twitter-tweet" data-in-reply-to="273293899307573248"><p>@<a href="https://twitter.com/susanpotter">susanpotter</a> I thought those were the same thing. What’s the difference?</p>&mdash; Chris Vest (@chvest) <a href="https://twitter.com/chvest/status/273316023355187201" data-datetime="2012-11-27T06:43:12+00:00">November 27, 2012</a></blockquote>
+<script src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<p>
+To be able to articulate the difference between the two above, I first want
+to review the notion of an <em>abstract data type</em> often abbreviated as
+<abbr title="Abstract Data Type">ADT</abbr> simply because some developers
+may confuse ADTs and algebraic data types (AlgDT).
+</p>
+
+<p>
+Going back to basics...
+</p>
+
+<h3>Abstract Data Type (ADT)</h3>
+<p>
+This refers to a specification
+of a data type like a stack or queue where the specification does not contain
+any implementation details at all, only the operations for that data type.
+This can be thought of as the contract of the data type.
+</p>
+
+<p>
+In computer science the most common example of this is a <em>stack</em>.
+The <em>stack</em> ADT specifies three operations for the type, which
+informally looks like:
+</p>
+
+<ul>
+  <li><em>push</em> - which allows an element to be pushed on the top of the
+    stack</li>
+  <li><em>pop</em> - which allows an element to be popped off the top of the
+    stack</li>
+  <li><em>peek</em> - which allows the top element to be inspected without
+    taking it off the top</li>
+</ul>
+
+<p>
+We can find implementations of many commom ADTs across many lanaguages
+and sometimes multiple implementations of ADTs in the same langauge or
+standard library for a language or runtime. Thus why the specification is an
+<em>abstract</em> data type as it doesn't dictate implementation details. :)
+</p>
+
+<p>
+A better specification would list inputs, outputs, and expected effects more
+formally, but since this should be a pretty familiar notion to most
+practicing developers today, I will not dwell on it.
+</p>
+
+<h3>Algebraic Data Type (AlgDT)</h3>
+
+<p>
+An <em>algebraic data type</em> on the other hand is a type definition where
+our type is one of N known <em>constructions</em>, where N is a finite
+positive integer, and each construction may hold zero or more components of
+specific types (although these components may vary from construction to
+construction.
+</p>
+
+<p>
+Practically N should be reasonably small most of the time
+(in the single or double digits) simply because all good software developers
+are lazy and dislike boilerplate code! :)
+</p>
+
+<h4>
+So can you give us an example?
+</h4>
+
+<img src="/images/fbtopbar.png" alt="Facebook topbar">
+
+<p>
+Sure. How about a social network event notification. Let's take Facebook.
+Whenever you sign into Facebook (or whatever social network you might use),
+you will likely be greeted with a visual indication of any notifications
+you might have since you last signed in. Things like friends <em>liking</em>
+your statuses, comments, or making comments on your posts or posts you have
+commented on yourself.
+</p>
+
+<img src="/images/fbnotifications.png" alt="Facebook notifications">
+
+<p>
+So a first stab at modeling this with an algebraic data type in Haskell
+might look like:
+</p>
+
+<pre data-lang="haskell">
+import Data.DateTime
+
+-- Assumes User is defined elsewhere and imported
+
+-- Assume Status and Comment types are already defined
+data Notification = CommentNotification Status [User] DateTime
+                  | CommentLikeNotification Comment [User] DateTime
+                  | PostLikeNotification Status [User] DateTime
+</pre>
+
+<h4>Interpretation and Observations</h4>
+
+<p>
+What did I actually do? Well if we look at the different notifications we
+see there are a variety of constructions of notification events, including:
+</p>
+
+<ul>
+  <li>When one of your statuses is liked it tells you who and at what time last action was taken</li>
+  <li>When one of your comments is liked it tells you who and the time last action was taken </li>
+  <li>When a post you commented on is commented on it tells you who and the time last action was taken</li>
+  <li>...</li>
+</ul>
+
+<p>
+Now I haven't defined all the constructions that a Facebook notification
+can take above, but if you added maybe 3 more it would be a fairly complete
+model of Facebook notification events.
+</p>
+
+<p>
+Let us dissect the Haskell code a little. The identifier on the LHS,
+<code>Notification</code>, is the type. Then the RHS contains an
+exhaustive list of possible <strong><em>constructors</em></strong> such as:
+<code>CommentNotification</code>, <code>CommentLikeNotification</code>,
+<code>PostLikeNotification</code> for our simple model.
+</p>
+
+<blockquote>
+  <q>
+    The notion of a type having a known, and exhaustive list of constructors
+    where the type must be constructed by exactly one of these is known as a
+    <strong>Tagged Union</strong>. I have also seen it called a
+    <em>sum type</em>. In fact, I much prefer the latter so expect me to use
+    that form in this and later articles.
+  </q>
+</blockquote>
+
+<p>
+Now we could have modeled <code>Notification</code> data type a little
+differently. Let us consider the following modeling of the domain:
+</p>
+
+<pre>
+import Data.DateTime
+
+-- Assumes User is defined elsewhere and imported
+
+-- We might want to add more constructors for Post sum type of a more
+-- complete model of Facebook notifications, but left as a homework to
+-- reader, because every algebra lesson has this ;)
+data Post = Status Text DateTime | Comment Text DateTime
+data Notification = Notification Post [User] DateTime
+</pre>
+
+<blockquote>
+  <q>
+    Notice <code>Notification</code> now has exactly one constructor.
+    In the language of abstract algebra, which computer scientists in
+    programming language theory appear to have adopted, a data type with
+    exactly one constructor is <em>isomorphic</em> to what is often called
+    a <em>product type</em> that takes an ordered list of typed
+    <em>operands</em>. Informally these are sometimes called <strong>
+    Record Types</strong>.
+  </q>
+</blockquote>
+
+<!--
+<h4>Sum Types (aka Tagged Unions)</h4>
+<p>
+TODO: Explain the algebraic properties of sum types.
+</p>
+
+<h4>Product Types (aka Record Types)</h4>
+<p>
+TODO: Explain the algebraic properties of product types.
+</p>
+-->
+
+<h3>Algebraic [Data] Structures</h3>
+
+<p>
+<em>Algebraic [data] structures</em> on the other hand may not be data
+types specifically, but they might be. An algebraic structure embodies
+a structure with consistent and known algebraic properties. In my
+recent SCNA talk, I described monoids specifically, which has a specific
+structure and properties that must be conformed to (or it isn't really a
+monoid at all).
+</p>
+
+<p>
+In fact, in Haskell a <code>Monoid</code> is defined as a typeclass, which
+is not an <abbr title="Algebraic Data Type">AlgDT</abbr>, however, you can
+view it as an <abbr title="Abstract Data Type">ADT</abbr> as it specifies
+an interface and contract without describing implementation details.
+</p>
+
+<h3>Conclusion</h3>
+
+<p>
+As we can see from the above, the three concepts are actually quite
+related to each other when slicing and dicing these things in various
+ways. However, they are not referring to the same thing. Of course,
+it depends on how people define these things, but the above is how
+I have seen these three terms defined before, fairly consistently.
+Going forward in the <a href="http://functionalalgebra.com">Functional
+Algebra</a> article series I will use these definitions for these
+terms unless otherwise noted.
+</p>
+      </div>
+
+      <div id="push"></div>
+    </div>
+
+    <div id="footer">
+      <div class="container">
+        <p class="credit">
+          Articles written by <a href="http://susanpotter.net/">Susan Potter</a> which are
+          <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/">Creative Commons BY-NC-SA 3.0 licensed</a>.
+          <br>
+          <small class="muted">
+            Website maintained by <a href="http://susanpotter.net">Susan Potter</a>
+            using <a href="http://twitter.github.com/bootstrap">Twitter's Bootstrap</a>
+            as a CSS "framework" (whatever that means).
+          </small>
+        </p>
+      </div>
+    </div>
+
+
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <!--
+    <script src="/js/jquery.js"></script>
+    <script src="/js/bootstrap-transition.js"></script>
+    <script src="/js/bootstrap-alert.js"></script>
+    <script src="/js/bootstrap-modal.js"></script>
+    <script src="/js/bootstrap-dropdown.js"></script>
+    <script src="/js/bootstrap-scrollspy.js"></script>
+    <script src="/js/bootstrap-tab.js"></script>
+    <script src="/js/bootstrap-tooltip.js"></script>
+    <script src="/js/bootstrap-popover.js"></script>
+    <script src="/js/bootstrap-button.js"></script>
+    <script src="/js/bootstrap-collapse.js"></script>
+    <script src="/js/bootstrap-carousel.js"></script>
+    <script src="/js/bootstrap-typeahead.js"></script>
+    -->
+
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+  </body>
+</html>
