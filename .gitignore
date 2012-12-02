@@ -1,3 +1,6 @@
+.DS_Store
 gh-pages
 target
 dist
+site/output
+site/tmp
