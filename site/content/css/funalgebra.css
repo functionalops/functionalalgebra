@@ -1,0 +1,91 @@
+/* Sticky footer styles
+-------------------------------------------------- */
+
+html,
+body {
+  height: 100%;
+  /* The html and body elements cannot have any padding or margin. */
+}
+
+/* Wrapper for page content to push down footer */
+#wrap {
+  min-height: 100%;
+  height: auto !important;
+  height: 100%;
+  /* Negative indent footer by it's height */
+  margin: 0 auto -60px;
+}
+
+/* Set the fixed height of the footer here */
+#push,
+#footer {
+  height: 60px;
+}
+
+#footer {
+  background-color: #E9F1DF;
+}
+
+#footer a {
+  color: #4AD9D9;
+}
+#footer a:visited {
+  color: #36B1BF;
+}
+
+/* Lastly, apply responsive CSS fixes as necessary */
+@media (max-width: 767px) {
+  #footer {
+    margin-left: -20px;
+    margin-right: -20px;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
+
+
+
+/* Custom page CSS
+-------------------------------------------------- */
+/* Not required for template or sticky footer method. */
+
+.container {
+  width: auto;
+  max-width: 680px;
+}
+.container .credit {
+  margin: 20px 0;
+}
+
+#article-schedule {
+  font-family:  "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+  padding-left: 0;
+  margin-left: 0;
+}
+
+#article-schedule li {
+  line-height: 1.8em;
+  border-bottom: 1px dashed #ddd;
+  list-style: none;
+  padding-bottom: 8px;
+}
+
+.article-title {
+  font-weight: 500;
+}
+
+.twitter-timeline {
+  height: 300px;
+}
+
+#goals {
+  padding-top: 1.5em;
+}
+
+#goals li {
+  padding-bottom: 1.5em;
+}
+
+blockquote.abstract {
+  display: none;
+}
