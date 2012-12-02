@@ -304,6 +304,15 @@ as a sum type this way.
 TODO: Explain the algebraic properties of product types.
 </p>
 
+<h4>Sum-Product Type Hybrids</h4>
+
+<p>
+In our original attempt to model Facebook notifications, we had a
+sum type with three known variants (<code>CommentNotification</code>,
+<code>CommentLikeNotification</code>, <code>StatusLikeNotification</code>)
+and each constructor was defined to take type operands.
+</p>
+
 <h4>Sum vs. Product Types Face Off</h4>
 
 <p>
@@ -392,6 +401,17 @@ terms unless otherwise noted.
     <script src="/js/bootstrap-carousel.js"></script>
     <script src="/js/bootstrap-typeahead.js"></script>
     -->
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-36722287-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
 
     <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
   </body>
