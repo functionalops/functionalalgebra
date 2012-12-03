@@ -61,80 +61,26 @@ practicing developers today, I will not dwell on it.
 
 <h3>Algebraic Data Type (AlgDT)</h3>
 
+<div class="well">
 <p>
-An <em>algebraic data type</em> on the other hand is a type definition where
-our type is one of N known <em>constructions</em>, where N is a finite
-positive integer, and each construction may hold zero or more components of
-specific types (although these components may vary from construction to
-construction.
+An <em>algebraic data type</em> can take many forms:
 </p>
-
-<p>
-Practically N should be reasonably small most of the time
-(in the single or double digits) simply because all good software developers
-are lazy and dislike boilerplate code! :)
-</p>
-
-<h4>
-So can you give us an example?
-</h4>
-
-<img src="/images/fbtopbar.png" alt="Facebook topbar">
-
-<p>
-Sure. How about a social network event notification. Let's take Facebook.
-Whenever you sign into Facebook (or whatever social network you might use),
-you will likely be greeted with a visual indication of any notifications
-you might have since you last signed in. Things like friends <em>liking</em>
-your statuses, comments, or making comments on your posts or posts you have
-commented on yourself.
-</p>
-
-<img src="/images/fbnotifications.png" alt="Facebook notifications">
-
-<p>
-So a first stab at modeling this with an algebraic data type in Haskell
-might look like:
-</p>
-
-<pre data-lang="haskell">
-import Data.DateTime
-
--- Assumes User is defined elsewhere and imported
-
--- Assume Status and Comment types are already defined
-data Notification = CommentNotification Status [User] DateTime
-                  | CommentLikeNotification Comment [User] DateTime
-                  | PostLikeNotification Status [User] DateTime
-</pre>
-
-<h4>Interpretation and Observations</h4>
-
-<p>
-What did I actually do? Well if we look at the different notifications we
-see there are a variety of constructions of notification events, including:
-</p>
-
 <ul>
-  <li>When one of your statuses is liked it tells you who and at what time last action was taken</li>
-  <li>When one of your comments is liked it tells you who and the time last action was taken </li>
-  <li>When a post you commented on is commented on it tells you who and the time last action was taken</li>
-  <li>...</li>
+  <li>Sum type</li>
+  <li>Product type</li>
+  <li>Unit type</li>
+  <li>Recursive type</li>
+  <li>Hybrid type</li>
 </ul>
 
 <p>
-Now I haven't defined all the constructions that a Facebook notification
-can take above, but if you added maybe 3 more it would be a fairly complete
-model of Facebook notification events.
+I will only discuss sum and product types here.
 </p>
 
-<p>
-Let us dissect the Haskell code a little. The identifier on the LHS,
-<code>Notification</code>, is the type. Then the RHS contains an
-exhaustive list of possible <strong><em>constructors</em></strong> such as:
-<code>CommentNotification</code>, <code>CommentLikeNotification</code>,
-<code>PostLikeNotification</code> for our simple model.
-</p>
+</div>
+
+<div class="well">
+<h4>Sum Types (aka Tagged Unions)</h4>
 
 <blockquote>
   <q>
@@ -147,39 +93,17 @@ exhaustive list of possible <strong><em>constructors</em></strong> such as:
 </blockquote>
 
 <p>
-Now we could have modeled <code>Notification</code> data type a little
-differently. Let us consider the following modeling of the domain:
+A <em>sum type</em> is a <em>concrete</em> type definition where
+our type is one of N known <em>constructions</em>, where N is a finite
+positive integer. Each construction may hold zero or more components of
+specific types (although these components may vary from construction to
+construction.
 </p>
 
-<pre>
-import Data.DateTime
-
--- Assumes User is defined elsewhere and imported
-
--- We might want to add more constructors for Post sum type of a more
--- complete model of Facebook notifications, but left as a homework to
--- reader, because every algebra lesson has this ;)
-data Post = Status Text DateTime | Comment Text DateTime
-data Notification = Notification Post [User] DateTime
-</pre>
-
-<blockquote>
-  <q>
-    Notice <code>Notification</code> now has exactly one constructor.
-    In the language of abstract algebra, which computer scientists in
-    programming language theory appear to have adopted, a data type with
-    exactly one constructor is <em>isomorphic</em> to what is often called
-    a <em>product type</em> that takes an ordered list of typed
-    <em>operands</em>. Informally these are sometimes called <strong>
-    Record Types</strong>.
-  </q>
-</blockquote>
-
-<div class="well">
-<h4>Sum Types (aka Tagged Unions)</h4>
-
 <p>
-TODO: Explain the algebraic properties of sum types.
+Practically speaking N should be reasonably small most of the time
+(in the single or double digits) simply because all good software developers
+are lazy and dislike boilerplate code! :)
 </p>
 
 <p>
@@ -254,9 +178,116 @@ as a sum type this way.
 
 <h4>Product Types (aka Record Types)</h4>
 
+<blockquote>
+  <q>
+    In the language of abstract algebra, which computer scientists in
+    programming language theory appear to have adopted, a data type with
+    exactly one constructor is <em>isomorphic</em> to what is often called
+    a <em>product type</em> that takes an ordered list of typed
+    <em>operands</em>. Informally these are sometimes called <strong>
+    Record Types</strong>.
+  </q>
+</blockquote>
+
 <p>
-TODO: Explain the algebraic properties of product types.
+@chvest pointed out while reviewing this article that the archetypal product
+type is the tuple. For example, perhaps we want to represent an image element
+in a HTML page. We might initially represent it as the following tuple:
 </p>
+
+<pre>
+(String, Int, Int)
+</pre>
+
+<p>
+Here we take a string (the source URL), an integer (the width), and a second
+integer (the height). The problem with tuples is that this might also
+represent any number of issues. It is hard to know what it is referring to.
+<strong>Enter product types.</strong>
+</p>
+
+<p>
+In Scala below we can represent an image element in HTML as the following
+case class.
+</p>
+
+<pre>
+case class ImageElement(sourceUrl: String, width: Int, height: Int)
+</pre>
+
+<p>
+Since pure product types only have one constructor for a type, we can
+eliminate the trait or abstract class <em>type</em> definition that
+we used in the sum type example above with <code>USCoin</code>.
+</p>
+
+<h4>Sum-Product Type Hybrids</h4>
+
+<img src="/images/fbtopbar.png" alt="Facebook topbar">
+
+<p>
+How about a social network event notification. Let's take Facebook.
+Whenever you sign into Facebook (or whatever social network you might use),
+you will likely be greeted with a visual indication of any notifications
+you might have since you last signed in. Things like friends <em>liking</em>
+your statuses, comments, or making comments on your posts or posts you have
+commented on yourself.
+</p>
+
+<img src="/images/fbnotifications.png" alt="Facebook notifications">
+
+<p>
+So a first stab at modeling this with an algebraic data type in Haskell
+might look like:
+</p>
+
+<pre data-lang="haskell">
+import Data.DateTime
+
+-- Assumes User is defined elsewhere and imported
+
+-- Assume Status and Comment types are already defined
+data Notification = CommentNotification Status [User] DateTime
+                  | CommentLikeNotification Comment [User] DateTime
+                  | PostLikeNotification Status [User] DateTime
+</pre>
+
+<p>
+What did I actually do? Well if we look at the different notifications we
+see there are a variety of constructions of notification events, including:
+</p>
+
+<ul>
+  <li>When one of your statuses is liked it tells you who and at what time last action was taken</li>
+  <li>When one of your comments is liked it tells you who and the time last action was taken </li>
+  <li>When a post you commented on is commented on it tells you who and the time last action was taken</li>
+  <li>...</li>
+</ul>
+
+<p>
+Let us dissect the Haskell code a little. The identifier on the LHS,
+<code>Notification</code>, is the type. Then the RHS contains an
+exhaustive list of possible <strong><em>constructors</em></strong> such as:
+<code>CommentNotification</code>, <code>CommentLikeNotification</code>,
+<code>PostLikeNotification</code> for our simple model.
+</p>
+
+<p>
+Now we could have modeled <code>Notification</code> data type a little
+differently. Let us consider the following modeling of the domain:
+</p>
+
+<pre>
+import Data.DateTime
+
+-- Assumes User is defined elsewhere and imported
+
+-- We might want to add more constructors for Post sum type of a more
+-- complete model of Facebook notifications, but left as a homework to
+-- reader, because every algebra lesson has this ;)
+data Post = Status Text DateTime | Comment Text DateTime
+data Notification = Notification Post [User] DateTime
+</pre>
 
 <h4>Sum vs. Product Types Face Off</h4>
 
@@ -281,23 +312,19 @@ monoid at all).
 In fact, in Haskell a <code>Monoid</code> is defined as a typeclass, which
 is not an <abbr title="Algebraic Data Type">AlgDT</abbr>, however, you can
 view it as an <abbr title="Abstract Data Type">ADT</abbr> by the above
-definition as it specifies an interface and contract without describing
-implementation details.
-</p>
-
-<p>
-
+definition as the type class declaration specifies only an interface and
+contract without describing implementation details. The instance definitions
+of <code>Monoid</code> for specific types will contain the implementation
+details.
 </p>
 
 <h3>Conclusion</h3>
 
 <p>
-As we can see from the above, the three concepts are actually quite
-related to each other when slicing and dicing these things in various
-ways. However, they are not referring to the same thing. Of course,
-it depends on how people define these things, but the above is how
-I have seen these three terms defined before, fairly consistently.
+It isn't necessarily the case that an algebraic structure
+is also an ADT and it is possible that you could describe an algebraic
+structure as an AlgDT if/when it makes sense.
 Going forward in the <a href="http://functionalalgebra.com">Functional
-Algebra</a> article series I will use these definitions for these
+Algebra</a> article series I will use the above definitions for these
 terms unless otherwise noted.
 </p>
