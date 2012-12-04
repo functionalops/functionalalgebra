@@ -335,6 +335,35 @@ data Post = Status Text DateTime | Comment Text DateTime
 data Notification = Notification Post [User] DateTime
 </pre>
 
+<p>
+This model of the domain of Facebook notifications uses a pure
+<em>product type</em> for the <code>Notification</code> type definition
+and a hybrid sum-product type for the <code>Post</code> type.
+</p>
+
+<p>
+Exactly how you model this domain will depend on what properties you would
+like the various types to possess. In fact, there are many ways you can
+model this domain with various forms of algebraic data types (AlgDT).
+It all depends on your program's view of the domain.
+</p>
+
+<p>
+There is no one presice view of a particular domain, it depends on your
+program's functionality. For example, if you are building a front office
+trade posting system, you are unlikely to need to model the historical
+view of a security or instrument type. You just need to know the active
+identifier (e.g. ticker, ISIN, CUSIP, internal id, etc.) for the security
+being traded today to flow through correctly.
+</p>
+
+<p>
+However, a knowledge management tool may need to model a security or
+instrument to have a historical view (e.g. how a corporate action impacted a
+security in the past, or the historical view of identifications or vendor
+symbols).
+</p>
+
 <!--
 <h4>Sum vs. Product Types Face Off</h4>
 
