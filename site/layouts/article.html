@@ -44,7 +44,7 @@
           <h2>
             <%= @item[:title] %>
           </h2>
-          <em>Rough draft alert!</em>
+          <em>Second draft alert!</em>
         </div>
         <blockquote class="pull-right">
           <p><em><%= @item[:summary] %></em></p>
@@ -53,9 +53,18 @@
       </div>
 
       <p>
-        <strong>
-        TODO: Add commenting JS includes here. This is only a rough draft!
-        </strong>
+        <script type="text/javascript">
+            var disqus_shortname = 'functionalalgebra'; // required: replace example with your forum shortname
+            (function() {
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view <a href="http://disqus.com/?ref_noscript">comments.</a></noscript>
+        <small class="hide">
+        <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </small>
       </p>
       <div id="push"></div>
     </div>

@@ -61,7 +61,6 @@ practicing developers today, I will not dwell on it.
 
 <h3>Algebraic Data Type (AlgDT)</h3>
 
-<div class="well">
 <p>
 An <em>algebraic data type</em> can take many forms:
 </p>
@@ -77,9 +76,6 @@ An <em>algebraic data type</em> can take many forms:
 I will only discuss sum and product types here.
 </p>
 
-</div>
-
-<div class="well">
 <h4>Sum Types (aka Tagged Unions)</h4>
 
 <blockquote>
@@ -143,7 +139,7 @@ logic or calculations.
 
 <p>
 You might be wondering how this can be done. Let us try to use this code
-(found in the GitHub repository...TODO link here) to explore this idea
+(coming to a GitHub repository near you soon) to explore this idea
 further. So fire up <code>sbt console</code> in the <tt>algdt</tt>
 subproject in the git repository.
 </p>
@@ -289,15 +285,34 @@ data Post = Status Text DateTime | Comment Text DateTime
 data Notification = Notification Post [User] DateTime
 </pre>
 
-<!--
-<h4>Sum vs. Product Types Face Off</h4>
+<p>
+This model of the domain of Facebook notifications uses a pure
+<em>product type</em> for the <code>Notification</code> type definition
+and a hybrid sum-product type for the <code>Post</code> type.
+</p>
 
 <p>
-TODO: When would you chose one over the other and when AlgDTs shouldn't
-be used at all.
+Exactly how you model this domain will depend on what properties you would
+like the various types to possess. In fact, there are many ways you can
+model this domain with various forms of algebraic data types (AlgDT).
+It all depends on your program's view of the domain.
 </p>
-</div>
--->
+
+<p>
+There is no one presice view of a particular domain, it depends on your
+program's functionality. For example, if you are building a front office
+trade posting system, you are unlikely to need to model the historical
+view of a security or instrument type. You just need to know the active
+identifier (e.g. ticker, ISIN, CUSIP, internal id, etc.) for the security
+being traded today to flow through correctly.
+</p>
+
+<p>
+However, a knowledge management tool may need to model a security or
+instrument to have a historical view (e.g. how a corporate action impacted a
+security in the past, or the historical view of identifications or vendor
+symbols).
+</p>
 
 <h3>Algebraic [Data] Structures</h3>
 
