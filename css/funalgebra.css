@@ -23,7 +23,7 @@ body {
 }
 
 #footer {
-  background-color: #E9F1DF;
+  border-top: 1px dashed #abcbcb;
 }
 
 #footer a {
