@@ -1,0 +1,94 @@
+---
+title: Testing Algebraic Properties
+summary: Introducing the reader to thinking in terms of properties and models. Contrasting this approach to case based testing.
+---
+
+<p>
+Over the last twelve years I have been developing in a test-first or
+test-driven way with different levels of commitment. :) However, it was only
+in the last four years that I discovered property-based testing. And it
+blew my socks off. I couldn't believe I was living in the dark ages for so
+long with case based tests. It also transformed the way I think when I write
+the code under test itself. Radically.
+</p>
+
+<p>
+Let me illustrate an example of each testing method below.
+</p>
+
+<p>
+Let us say we want to write a function that sorts a list of elements. It can
+be any sorting algorithm as long as it is correct. In this comparison we
+are concerned foremost with correctness not performance for certain kinds
+or sizes of lists.
+</p>
+
+<h3>Case-based Testing Example</h3>
+
+<p>
+In the case-based testing method we would first think of the simplest case
+to test first.
+</p>
+
+<pre><code class="erlang">
+-include_lib("eunit/include/eunit.hrl").
+
+test_sort_empty_list() ->
+  ?assert([] =:= lists:sort([])).
+</code></pre>
+
+<p>
+Then we might come up with a few other cases that come to mind.
+</p>
+
+<pre><code class="erlang">
+-define(SORTED_MULTI_ELEMENT_LIST, [1,2]).
+-define(UNSORTED_MULTI_ELEMENT_LIST, [2,1]).
+
+test_single_element_list() ->
+  ?assert([1] =:= lists:sort([1])).
+
+test_unsorted_multi_element_list() ->
+  ?assert(?SORTED_MULTI_ELEMENT_LIST =:= lists:sort(?UNSORTED_MULTI_ELEMENT_LIST)).
+
+test_sorted_multi_element_list() ->
+  ?assert(?SORTED_MULTI_ELEMENT_LIST =:= lists:sort(?SORTED_MULTI_ELEMENT_LIST)).
+</code></pre>
+
+<p>
+I could keep going, but I think you get the idea here.
+</p>
+
+<h3>Property-based Testing Example</h3>
+
+<p>
+Now for the same code under test we can think about the algebraic properties
+of the function to test for. To me this is a fundamental idea in functional
+programming. So let's look at the algebra of sorting lists.
+</p>
+
+<ul>
+  <li>
+    Sorting is idempotent. Yep. What does that mean? It means this
+    <pre><code class="erlang">?assert(lists:sort(Unsorted) =:= lists:sort(lists:sort(Unsorted))).</code></pre>
+  </li>
+  <li>
+    The size of the resulting list is the same as the given list (for all
+    lists). So we could write the following:
+    <pre><code class="erlang">?assert(length(lists:sort(Unsorted)) =:= length(Unsorted)).</code></pre>
+  </li>
+</ul>
+
+<p>
+Now the above code for this section is pseudo code. There are libraries in
+Erlang that provide the ability to specify these are properties and be able
+to generate lists in many more ways.
+</p>
+
+<h2>Observations</h2>
+
+<p>
+
+</p>
+
+
